@@ -12,38 +12,39 @@
 			this.gameIsRunning = true;
 		},
 		attack: function() {
-			this.monsterHealth -= this.calculateDamage(3, 10);
-			if (this.monsterHealth < 0) {
-				this.monsterHealth = 0;
-			}
-			if (this.checkWin()) {
-				return;
-			}
-			this.playerHealth -= this.calculateDamage(5, 12);
-			if (this.playerHealth < 0) {
-				this.playerHealth = 0;
-			}
-			this.checkWin();
+			this.playerAttack(3,10);
+			this.monsterAttack(5, 12);
 		},
 		specialAttack: function() {
-			this.monsterHealth -= this.calculateDamage(10, 18);
+			this.playerAttack(10,20);
+			this.monsterAttack(8, 20);
+		},
+		heal: function() {
+			if (this.playerHealth <= 90) {
+				this.playerHealth += 10;
+			} else {
+				this.playerHealth = 100;
+			}
+			this.monsterAttack(5, 12);
+		},
+		giveUp: function() {
+			this.gameIsRunning = false;
+		},
+		playerAttack: function(min, max) {
+			this.monsterHealth -= this.calculateDamage(min, max);
 			if (this.monsterHealth < 0) {
 				this.monsterHealth = 0;
 			}
 			if (this.checkWin()) {
 				return;
 			}
-			this.playerHealth -= this.calculateDamage(8, 20);
+		},
+		monsterAttack: function(min, max) {
+			this.playerHealth -= this.calculateDamage(min, max);
 			if (this.playerHealth < 0) {
 				this.playerHealth = 0;
 			}
 			this.checkWin();
-		},
-		heal: function() {
-
-		},
-		giveUp: function() {
-
 		},
 		calculateDamage: function(min, max) {
 			return Math.max(Math.floor(Math.random() * max) + 1, min);
