@@ -26,7 +26,18 @@
 			this.checkWin();
 		},
 		specialAttack: function() {
-
+			this.monsterHealth -= this.calculateDamage(10, 18);
+			if (this.monsterHealth < 0) {
+				this.monsterHealth = 0;
+			}
+			if (this.checkWin()) {
+				return;
+			}
+			this.playerHealth -= this.calculateDamage(8, 20);
+			if (this.playerHealth < 0) {
+				this.playerHealth = 0;
+			}
+			this.checkWin();
 		},
 		heal: function() {
 
