@@ -4,24 +4,29 @@
 		playerHealth: 100,
 		monsterHealth: 100,
 		gameIsRunning: false,
+		turns: [],
 	},
 	methods: {
 		startGame: function() {
 			this.gameIsRunning = true;
-			this.playerHealth = 100;
 			this.monsterHealth = 100;
+			this.playerHealth = 100;
 		},
 		attack: function() {
-			this.playerAttack(3,10);
-			this.monsterAttack(5, 12);
+			this.playerAttack(3,10, false);
+			this.monsterAttack(5, 12, false);
 		},
 		specialAttack: function() {
-			this.playerAttack(10,20);
-			this.monsterAttack(8, 20);
+			this.playerAttack(10,20, true);
+			this.monsterAttack(8, 20, true);
 		},
 		heal: function() {
 			if (this.playerHealth <= 90) {
 				this.playerHealth += 10;
+				this.turns.unshift({
+					isPlayer: true,
+					text: 'Player heals for 10'
+				});
 			} else {
 				this.playerHealth = 100;
 			}
@@ -30,17 +35,43 @@
 		giveUp: function() {
 			this.gameIsRunning = false;
 		},
-		playerAttack: function(min, max) {
-			this.monsterHealth -= this.calculateDamage(min, max);
+		playerAttack: function(min, max, value) {
+			var damage = this.calculateDamage(min, max);
+			this.monsterHealth -= damage;
+			if (value) {
+				this.turns.unshift({
+					isPlayer: true,
+					text: 'Player hits hard Monster for ' + damage
+				});
+			} else {
+				this.turns.unshift({
+					isPlayer: true,
+					text: 'Player hits Monster for ' + damage
+				});
+			}
+			
 			if (this.monsterHealth < 0) {
 				this.monsterHealth = 0;
 			}
+
 			if (this.checkWin()) {
 				return;
 			}
 		},
-		monsterAttack: function(min, max) {
-			this.playerHealth -= this.calculateDamage(min, max);
+		monsterAttack: function(min, max, value) {
+			var damage = this.calculateDamage(min, max);
+			this.playerHealth -= damage;
+			if (value) {
+				this.turns.unshift({
+					isPlayer: false,
+					text: 'Monster hits hard Player for ' + damage
+				});
+			} else {
+				this.turns.unshift({
+					isPlayer: false,
+					text: 'Monster hits Player for ' + damage
+				});
+			}
 			if (this.playerHealth < 0) {
 				this.playerHealth = 0;
 			}
